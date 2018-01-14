@@ -215,6 +215,7 @@ static void FSCheckSecurityACL(void *data, int type, u_int32_t id, u_int32_t mod
 	case FS_ENUM_USER:
 		if (id == getuid())
 			*result = SSH2_FX_OK;
+		break;
 	case FS_ENUM_GROUP:
 		if (id == getgid())
 			*result = SSH2_FX_OK;
@@ -561,7 +562,7 @@ int FSReadLink(const char *file, char *readLink, int sizeofReadLink)
 		FSDestroyPath(path);
 		return SSH2_FX_PERMISSION_DENIED;
 	}
-	len = readlink(path->realPath, readLink, sizeofReadLink);
+	len = readlink(path->realPath, readLink, sizeofReadLink - 1);
 	DEBUG((MYLOG_DEBUG, "[FSReadLink]realPath:'%s' sizeofReadLink:%i => %i", path->realPath, sizeofReadLink, len));
 
 	if (len == -1)
