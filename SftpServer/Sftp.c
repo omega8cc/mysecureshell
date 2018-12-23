@@ -1,7 +1,7 @@
 /*
  MySecureShell permit to add restriction to modified sftp-server
  when using MySecureShell as shell.
- Copyright (C) 2007-2014 MySecureShell Team
+ Copyright (C) 2007-2018 MySecureShell Team
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -144,6 +144,7 @@ void DoInit()
 #ifdef MSSEXT_FILE_HASHING
 				BufferPutString(opt, "check-file");
 #endif //MSSEXT_FILE_HASHING
+				BufferPutString(b, "hardlink@openssh.com");
 				BufferPutPacket(b, opt);
 				BufferDelete(opt);
 			}
@@ -167,6 +168,8 @@ void DoInit()
 			BufferPutString(b, "check-file");
 			BufferPutString(b, "");
 #endif //MSSEXT_FILE_HASHING
+			BufferPutString(b, "hardlink@openssh.com");
+			BufferPutString(b, "1");
 		}
 	}
 	BufferPutPacket(bOut, b);
@@ -850,6 +853,9 @@ void DoExtended()
 		DoExtFileHashing_Name(bIn, bOut, id);
 	else
 #endif //MSSEXT_FILE_HASHING
+	if (strcmp(request, "hardlink@openssh.com") == 0)
+		DoExtHardLink(bIn, bOut, id);
+	else
 		SendStatus(bOut, id, SSH2_FX_OP_UNSUPPORTED);
 	free(request);
 }
